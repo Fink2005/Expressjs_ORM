@@ -1,0 +1,6 @@
+:root {
+  font-family: "Roboto", serif;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

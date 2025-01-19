@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model comments {
+  comment_id       Int       @id @default(autoincrement())
+  comment_user_id  Int?
+  comment_image_id Int?
+  comment_date     DateTime? @default(now()) @db.Timestamp(0)
+  comment_content  String?   @db.Text
+  users            users?    @relation(fields: [comment_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "comments_ibfk_1")
+  images           images?   @relation(fields: [comment_image_id], references: [image_id], onDelete: NoAction, onUpdate: NoAction, map: "comments_ibfk_2")
+
+  @@index([comment_image_id], map: "comment_image_id")
+  @@index([comment_user_id], map: "comment_user_id")
+}
+
+model images {
+  image_id      Int             @id @default(autoincrement())
+  image_name    String          @db.VarChar(255)
+  image_url     String          @db.VarChar(255)
+  image_des     String          @db.VarChar(255)
+  image_user_id Int?
+  comments      comments[]
+  users         users?          @relation(fields: [image_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "images_ibfk_1")
+  saving_images saving_images[]
+
+  @@index([image_user_id], map: "image_user_id")
+}
+
+model saving_images {
+  saving_image_user_id  Int
+  saving_image_image_id Int
+  saved_date            DateTime? @default(now()) @db.Timestamp(0)
+  users                 users     @relation(fields: [saving_image_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "saving_images_ibfk_1")
+  images                images    @relation(fields: [saving_image_image_id], references: [image_id], onDelete: NoAction, onUpdate: NoAction, map: "saving_images_ibfk_2")
+
+  @@id([saving_image_user_id, saving_image_image_id])
+  @@index([saving_image_image_id], map: "saving_image_image_id")
+}
+
+model users {
+  user_id       Int             @id @default(autoincrement())
+  user_name     String          @db.VarChar(255)
+  email         String          @unique(map: "email") @db.VarChar(100)
+  password      String          @db.VarChar(255)
+  age           Int             @db.UnsignedTinyInt
+  avatar        String?         @db.VarChar(255)
+  comments      comments[]
+  images        images[]
+  saving_images saving_images[]
+}
