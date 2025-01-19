@@ -4,7 +4,7 @@ import {
   signInTypeRespone,
   signUpTypeRespone,
   signUpTypeResquest,
-} from "../types/auth";
+} from "../../types/auth";
 
 const auth = {
   signIn: (payload: signInTypeRequest): Promise<signInTypeRespone> =>
