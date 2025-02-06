@@ -1,15 +1,16 @@
 import { BadRequestException } from "../common/helpers/error.helper.ts";
-import { prisma } from "../prisma/init.prisma.ts";
+import { prisma } from "../../prisma/init.prisma.ts";
 import jwt from "jsonwebtoken";
 import express from "express";
 import bcrypt from "bcrypt";
-import type { userInfoType } from "../common/types/users";
+import passport from "passport";
+import type { userInfoType } from "../common/types/users.ts";
 import {
   ACCESS_TOKEN_SECRET,
   ACCESS_TOKEN_EXPIRED,
   REFRESH_TOKEN_SECRET,
   REFRESH_TOKEN_EXPIRED,
-} from "../common/constant/app.constant";
+} from "../common/constant/app.constant.ts";
 import type { SigninRes, SignupRes } from "../common/types/auth.ts";
 const authService = {
   signUp: async (req: express.Request) => {
@@ -53,6 +54,9 @@ const authService = {
     delete userExist?.password;
     const resUserSignIn: SigninRes = { ...userExist, ...tokens };
     return resUserSignIn;
+  },
+  google: async (req: express.Request) => {
+    return "thu thoi";
   },
   createTokens: (userId: number) => {
     if (!userId) throw new BadRequestException("Lỗi token");

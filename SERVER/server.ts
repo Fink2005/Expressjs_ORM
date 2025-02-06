@@ -1,7 +1,6 @@
 import express from "express";
-import rootRouter from "./routes/root.router";
-import { handleError } from "./common/helpers/error.helper";
-
+import rootRouter from "./src/routes/root.router";
+import { handleError } from "./src/common/helpers/error.helper";
 const app = express();
 app.use(express.json());
 app.use(rootRouter);

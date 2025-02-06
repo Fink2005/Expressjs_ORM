@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import userService from "../services/user.service.ts";
-import { responeSuccess } from "../common/helpers/response.helper";
+import { responeSuccess } from "../common/helpers/response.helper.ts";
 
 const userController = {
   userList: async (req: Request, res: Response, next: NextFunction) => {

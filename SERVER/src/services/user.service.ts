@@ -1,6 +1,6 @@
 import { BadRequestException } from "../common/helpers/error.helper.ts";
 import type { userInfoType } from "../common/types/users.ts";
-import { prisma } from "../prisma/init.prisma.ts";
+import { prisma } from "../../prisma/init.prisma.ts";
 import type { Request } from "express";
 const userService = {
   userUpdate: async (req: Request) => {

@@ -1,5 +1,5 @@
 import type { Request } from "express";
-import { prisma } from "../prisma/init.prisma";
+import { prisma } from "../../prisma/init.prisma";
 import { BadRequestException } from "../common/helpers/error.helper";
 const detailService = {
   imageInfo: async (req: Request) => {

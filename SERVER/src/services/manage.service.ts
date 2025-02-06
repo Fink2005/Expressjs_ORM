@@ -1,8 +1,8 @@
 import type { Request } from "express";
-import { prisma } from "../prisma/init.prisma";
+import { prisma } from "../../prisma/init.prisma";
 import { BadRequestException } from "../common/helpers/error.helper";
 import type { userInfoType } from "../common/types/users";
-import type { imagesType, savingImageType } from "../common/types/images";
+import type { savingImageType } from "../common/types/images";
 const manageService = {
   userOne: async (req: Request) => {
     const { user_id } = req.params;

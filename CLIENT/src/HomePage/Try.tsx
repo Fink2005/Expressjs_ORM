@@ -4,13 +4,8 @@ import {
   increment,
   incrementByAmount,
 } from "../redux/features/counter/counterSlice";
-import { useNavigate } from "react-router-dom";
-import { ResponeRestaurant } from "../api/hooks/use-restaurant";
 import ToogleTheme from "../ToogleTheme";
 function Try() {
-  const navigate = useNavigate();
-  const restaurantNe = ResponeRestaurant();
-
   const count = useSelector(
     (state: { counter: { value: number } }) => state.counter.value
   );

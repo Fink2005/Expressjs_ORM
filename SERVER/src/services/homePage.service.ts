@@ -1,5 +1,5 @@
 import type { Request } from "express";
-import { prisma } from "../prisma/init.prisma";
+import { prisma } from "../../prisma/init.prisma";
 import type { imagesType } from "../common/types/images";
 import { BadRequestException } from "../common/helpers/error.helper";
 

@@ -9,10 +9,15 @@
   "dependencies": {
     "@prisma/client": "^6.2.1",
     "@types/express": "^5.0.0",
+    "@types/passport-google-oauth20": "^2.0.16",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
+    "npm": "^11.0.0",
+    "passport": "^0.7.0",
+    "passport-google-oidc": "^0.1.0",
     "prisma": "^6.2.1"
   },
   "devDependencies": {

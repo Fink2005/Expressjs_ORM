@@ -1,6 +1,6 @@
 import type { Request } from "express";
 import { BadRequestException } from "../common/helpers/error.helper";
-import { prisma } from "../prisma/init.prisma";
+import { prisma } from "../../prisma/init.prisma";
 import type { userInfoType } from "../common/types/users";
 import type { imagesCreateType } from "../common/types/images";
 

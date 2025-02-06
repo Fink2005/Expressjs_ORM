@@ -30,6 +30,19 @@ const authController = {
       next(error);
     }
   },
+  google: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const authSignin: SigninRes = await authService.google(req);
+      const resauthSignin = responeSuccess(
+        authSignin,
+        "Sign in by google successfully",
+        200
+      );
+      res.status(resauthSignin.code).json(resauthSignin);
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 export default authController;
