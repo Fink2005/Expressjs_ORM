@@ -1,10 +1,15 @@
+import { commentsDetail } from "../../types/comments";
+import { imageResDetail } from "../../types/images";
 import api from "../api";
 
 const detailPage = {
-  userInfo: (): Promise<unknown> => api.get("/info/:image_id"),
-  commentsTaking: (): Promise<unknown> => api.get("/comments/:image_id"),
+  userInfo: (params: string): Promise<imageResDetail> =>
+    api.get(`/api/info/${params}`),
+  commentsInfo: (params: string): Promise<commentsDetail> =>
+    api.get(`/api/comments/${params}`),
   imageSaving: (): Promise<unknown> => api.get("/image-saving"),
-  commentsCreating: (): Promise<unknown> => api.post("/comments"),
+  commentsCreating: (dataComment: any): Promise<unknown> =>
+    api.post("/api/comments", dataComment),
   imageSavingCreating: (): Promise<unknown> => api.post("/image-creating"),
 };
 

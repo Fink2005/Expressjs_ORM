@@ -1,7 +1,8 @@
+import { imageRes } from "../../types/images";
 import api from "../api";
 
 const imageHomePage = {
-  getItemImagesHomePage: (): Promise<unknown> => {
+  getItemImagesHomePage: (): Promise<imageRes> => {
     return api.get("/api/images");
   },
   findItemImagesHomePage: (): Promise<unknown> => {

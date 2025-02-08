@@ -8,6 +8,14 @@ const detailService = {
       where: {
         image_id: Number(image_id),
       },
+      include: {
+        users: {
+          select: {
+            user_name: true,
+            avatar: true,
+          },
+        },
+      },
     });
     if (!imageIdExist) {
       throw new BadRequestException("Lỗi không tìm thấy dữ liệu");
@@ -29,6 +37,7 @@ const detailService = {
         users: {
           select: {
             user_name: true,
+            avatar: true,
           },
         },
       },

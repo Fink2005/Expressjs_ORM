@@ -10,16 +10,12 @@ const Layout: React.FC<LayoutProps> = ({ content }) => {
     <div>
       <Sidebar />
 
-      <div className="ml-32">
+      <div className="ml-24">
         <Header />
         <div className="main-content">
-          <div>{content}</div>
+          <div className="h-auto">{content}</div>
           {/* This will render the content passed from other components */}
         </div>
-
-        <footer>
-          <p>Footer content</p>
-        </footer>
       </div>
     </div>
   );

@@ -9,7 +9,9 @@ import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/s
 import { Provider } from "react-redux";
 import store from "./redux/store.ts";
 import "./index.css";
+import { AppProvider } from "@toolpad/core/AppProvider";
 const queryClient = new QueryClient();
+
 const theme = createTheme({
   colorSchemes: {
     dark: true,
@@ -17,16 +19,18 @@ const theme = createTheme({
 });
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <CssVarsProvider theme={theme}>
-      <CssBaseline />
-      <Provider store={store}>
-        <Router>
-          <QueryClientProvider client={queryClient}>
-            <App />
-            <ReactQueryDevtools initialIsOpen={false} />
-          </QueryClientProvider>
-        </Router>
-      </Provider>
-    </CssVarsProvider>
+    <AppProvider>
+      <CssVarsProvider theme={theme}>
+        <CssBaseline />
+        <Provider store={store}>
+          <Router>
+            <QueryClientProvider client={queryClient}>
+              <App />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
+          </Router>
+        </Provider>
+      </CssVarsProvider>
+    </AppProvider>
   </StrictMode>
 );
