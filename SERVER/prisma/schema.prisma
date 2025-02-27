@@ -48,9 +48,11 @@ model users {
   user_id       Int             @id @default(autoincrement())
   user_name     String          @db.VarChar(255)
   email         String          @unique(map: "email") @db.VarChar(100)
-  password      String          @db.VarChar(255)
-  age           Int             @db.UnsignedTinyInt
+  password      String?         @db.VarChar(255)
+  age           Int?            @db.UnsignedTinyInt
   avatar        String?         @db.VarChar(255)
+  googleId      String?         @unique(map: "googleId") @db.VarChar(255)
+  facebookId    String?         @unique(map: "facebookId") @db.VarChar(255)
   comments      comments[]
   images        images[]
   saving_images saving_images[]

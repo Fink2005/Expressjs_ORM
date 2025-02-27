@@ -1,8 +1,5 @@
-import React, { useState } from "react";
-import {
-  useCreateCommentsDetail,
-  useInfoCommentsDetail,
-} from "../api/hooks/use-info-detail";
+import React, { useEffect, useState } from "react";
+import { useInfoCommentsDetail } from "../api/hooks/use-info-detail";
 import { IoIosArrowUp } from "react-icons/io";
 import EmojiPicker from "emoji-picker-react";
 import { IoSend } from "react-icons/io5";
@@ -10,21 +7,59 @@ import { Avatar, Popover } from "@mui/material";
 import { FaSmile } from "react-icons/fa";
 import { blue } from "@mui/material/colors";
 
-type paramsType = {
+type CommentsProps = {
   params: {
     id?: string;
   };
+  socket: any;
 };
-export default function Comments({ params }: paramsType) {
-  const { mutateAsync, isSuccess } = useCreateCommentsDetail();
+
+export default function Comments({ params, socket }: CommentsProps) {
   const [displayComments, setDisplayComments] = useState<boolean>(false);
-  const { data, refetch } = useInfoCommentsDetail(params.id);
-  const dataComments = data?.data.metaData;
+  const { data } = useInfoCommentsDetail(params.id);
+
+  const [commentData, setCommentData] = useState<any>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
+  const [userExist, setUserExist] = useState("");
+  useEffect(() => {
+    if (data) {
+      setCommentData(data?.data.metaData);
+      // socket.on("recieve-message", (dataMessage: any) => {
+      //   if (dataMessage) {
+      //     console.log(dataMessage);
+      //     setCommentData((prev) => [...prev, dataMessage]);
+      //   }
+      // });
+    }
+  }, [data]);
 
+  useEffect(() => {
+    console.log("Setting up socket listener"); // Check if this runs
+    socket.emit("join-detail-image", params.id);
+    socket.on("userDisconnected", (data) => {
+      console.log("mat ket noi", data.message);
+    });
+
+    socket.on("recieve-message", (dataMessage: any) => {
+      if (dataMessage) {
+        setCommentData((prev) => [...prev, dataMessage]);
+      }
+    });
+    // Cleanup to avoid duplicate listeners
+    return () => {
+      socket.off("recieve-message");
+      socket.off("userDisconnected");
+      socket.off("join-detail-image");
+    };
+  }, [commentData]);
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      setUserExist(JSON.parse(localStorage.getItem("user")!));
+    }
+  }, []);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -39,22 +74,22 @@ export default function Comments({ params }: paramsType) {
   const handleComment = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
+
   const handlePushComment = async () => {
+    if (!userExist) {
+      alert("can phai dang nhap");
+      return;
+    }
     const dataPushComment = {
       image_id: Number(params.id),
-      user_id: 1,
+      user_info: userExist,
       comment_content: inputValue,
     };
-    try {
-      const result = await mutateAsync(dataPushComment);
-      console.log(result);
-      setInputValue("");
-      refetch();
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
+    await socket.emit("send-message", dataPushComment);
+    setInputValue("");
+  };
+  console.log(commentData);
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
@@ -62,7 +97,9 @@ export default function Comments({ params }: paramsType) {
     <div className="mt-5">
       <div className="">
         <div className="flex justify-between">
-          <p className="text-md font-medium">{dataComments?.length} Nhận xét</p>
+          <p className="text-md font-medium">
+            {data?.data.metaData.length} Nhận xét
+          </p>
           <div
             className={`mr-3 cursor-pointer transition-all duration-300 ${
               displayComments ? "rotate-0" : "-rotate-180"
@@ -79,9 +116,9 @@ export default function Comments({ params }: paramsType) {
               : "opacity-0 translate-y-5"
           }`}
         >
-          {dataComments?.map((comment, index) => {
+          {commentData?.map((comment, index) => {
             return (
-              <div className="flex items-center space-x-1 ">
+              <div className="flex items-center space-x-1" key={index}>
                 <div className="my-2 flex space-x-2">
                   <Avatar
                     variant="circular"
@@ -111,7 +148,7 @@ export default function Comments({ params }: paramsType) {
               onChange={handleComment}
               value={inputValue}
               placeholder="Thêm nhận xét"
-              className="bg-gray-custom rounded-full w-full py-3 pl-4 font-medium"
+              className="bg-gray-custom rounded-full w-full py-3 pl-4 font-medium pr-24"
             />
             <div className="absolute top-1/2 -translate-y-1/2 right-6">
               <div className="flex space-x-2">

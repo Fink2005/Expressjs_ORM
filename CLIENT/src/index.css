@@ -4,3 +4,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.buttonFacebook {
+  border-radius: 300;
+  height: 40px;
+  width: 100%;
+}
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation6.MuiSnackbarContent-root.css-1wckuhe-MuiPaper-root-MuiSnackbarContent-root {
+  background: #2e4f7c !important;
+}

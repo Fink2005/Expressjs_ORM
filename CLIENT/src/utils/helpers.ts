@@ -9,3 +9,10 @@ export function stringAvatar(name: string) {
     }
   }
 }
+
+
+
+export const accessTokenExist = () => {
+  const accessToken = JSON.parse(localStorage.getItem('user')!).tokens.accessToken
+  return accessToken ? accessToken : ''
+}

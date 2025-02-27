@@ -10,6 +10,11 @@ import { useEffect, useRef, useState } from "react";
 import Comments from "../components/Comments";
 import { stringAvatar } from "../utils/helpers";
 import { CgArrowsExpandLeft } from "react-icons/cg";
+import io from "socket.io-client";
+import { BASE_URL } from "../constants/app.constant";
+import { useSavingDetailPage } from "../api/hooks/use-detail-page";
+const socket = io(BASE_URL);
+
 export default function Details() {
   const [favorite, setFavorite] = useState<boolean>(false);
   const [displayPreview, setDisplayPreview] = useState<boolean>(false);
@@ -18,6 +23,9 @@ export default function Details() {
   const dataImage = data?.data?.metaData;
   const imageRef = useRef<HTMLImageElement | null>(null);
   const buttonPreviewRef = useRef<HTMLImageElement | null>(null);
+  const [isDisable, setisDisable] = useState<boolean>(false);
+  const { mutateAsync } = useSavingDetailPage();
+
   // Close image when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -39,6 +47,15 @@ export default function Details() {
     };
   }, []);
 
+  const handleSaving = async () => {
+    try {
+      const savingImage = await mutateAsync(Number(params.id));
+      console.log(savingImage);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-center ">
@@ -49,24 +66,18 @@ export default function Details() {
               className="h-full w-full object-contain"
               alt=""
             />
-            {/* <div className="absolute bottom-5 right-5 group w-10 hover:w-36 duration-700 flex items-center rounded-full justify-center transition-all ease-in-out bg-gray-custom">
-            <div className="ps-2 hidden group-hover:opacity-100 opacity-0 group-hover:block  w-full group-hover:w-3/4">
-              Xem lớn hơn
-            </div>
-            <div className="h-10 flex justify-center items-center group-hover:w-1/4 w-full">
-              <CgArrowsExpandLeft className="z-50" />
-            </div>
-          </div> */}
             <div
               className="absolute bottom-5 right-5 group cursor-pointer"
               onClick={() => setDisplayPreview(true)}
               ref={buttonPreviewRef}
             >
-              <div className="text-md font-semibold transition-all h-10 absolute bottom-0 right-0 w-0 group-hover:w-36 ease-in duration-300 flex items-center group-hover:bg-gray-custom rounded-full group-hover:ps-3 overflow-hidden">
+              <div className="text-md font-semibold transition-all h-10 absolute bottom-0 right-0 w-0 group-hover:w-36 ease-in duration-300  flex items-center group-hover:bg-gray-custom rounded-full group-hover:ps-3 overflow-hidden">
                 <p className="text-nowrap ">Xem lớn hơn</p>
               </div>
-              <div className="h-10 flex justify-center items-center w-10  group rounded-full bg-gray-custom z-50">
-                <CgArrowsExpandLeft className="z-50 w-full rounded-full bg-gray-custom " />
+              <div className="h-10 w-10 group rounded-full bg-gray-custom z-50">
+                <div className="z-50 w-full rounded-full bg-gray-custom h-full flex justify-center items-center">
+                  <CgArrowsExpandLeft className="z-50 py-3 size-full border rounded-full bg-gray-custom " />
+                </div>
               </div>
             </div>
           </div>
@@ -95,7 +106,10 @@ export default function Details() {
                 </div>
               </div>
               <div className="me-3">
-                <button className="flex items-center text-white p-2 px-4 bg-red-600 rounded-3xl">
+                <button
+                  className="flex items-center text-white p-2 px-4 bg-red-600 rounded-3xl"
+                  onClick={handleSaving}
+                >
                   <p className="text-lg font-medium">Lưu</p>
                 </button>
               </div>
@@ -115,7 +129,7 @@ export default function Details() {
               </p>
             </div>
             <div>
-              <Comments params={params} />
+              <Comments params={params} socket={socket} />
             </div>
           </div>
 
@@ -132,7 +146,10 @@ export default function Details() {
               alt=""
             />
           </div>
-          <button className="flex items-center text-white p-2 px-4 bg-red-600 rounded-3xl fixed top-3 right-3">
+          <button
+            disabled={!isDisable}
+            className="flex items-center text-white p-2 px-4 bg-red-600 rounded-3xl fixed top-3 right-3"
+          >
             <p className="text-lg font-medium">Lưu</p>
           </button>
           <button

@@ -7,10 +7,10 @@ const detailPage = {
     api.get(`/api/info/${params}`),
   commentsInfo: (params: string): Promise<commentsDetail> =>
     api.get(`/api/comments/${params}`),
-  imageSaving: (): Promise<unknown> => api.get("/image-saving"),
+  imageSaving: (idUser: number): Promise<unknown> => api.post("/api/image-saving", idUser),
   commentsCreating: (dataComment: any): Promise<unknown> =>
     api.post("/api/comments", dataComment),
-  imageSavingCreating: (): Promise<unknown> => api.post("/image-creating"),
+  imageSavingCreating: (idImageAndUser: any): Promise<unknown> => api.get(`/api/image-creating${idImageAndUser}`,),
 };
 
 export default detailPage;

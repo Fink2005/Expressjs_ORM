@@ -78,7 +78,7 @@ const detailService = {
     return dataComment;
   },
   imageSavingOne: async (req: Request) => {
-    const { user_id } = req.query;
+    const { user_id } = req.body;
     const userExist = await prisma.users.findFirst({
       where: {
         user_id: Number(user_id),
@@ -87,22 +87,21 @@ const detailService = {
     if (!userExist) {
       throw new BadRequestException("Lỗi không tìm thấy người dùng");
     }
-    const imageSaving = await prisma.saving_images.findFirst({
+    const imageSaving = await prisma.saving_images.findMany({
       where: {
         saving_image_user_id: Number(user_id),
       },
     });
 
-    const newImageSaving = { ...imageSaving, saving: false };
 
-    if (!imageSaving) return newImageSaving;
-
-    newImageSaving.saving = !newImageSaving.saving;
-
-    return newImageSaving;
+    return imageSaving;
   },
   imageCreatingOne: async (req: Request) => {
-    const { user_id, image_id } = req.body;
+    console.log('hello')
+    const { image_id } = req.params;
+    console.log(image_id)
+    const {user} = req
+    console.log(user)
     const imageIdExist = await prisma.images.findUnique({
       where: {
         image_id: Number(image_id),
@@ -113,7 +112,7 @@ const detailService = {
     }
     const userExist = await prisma.users.findFirst({
       where: {
-        user_id: Number(user_id),
+        user_id: Number(user?.user_id),
       },
     });
     if (!userExist) {
@@ -121,7 +120,7 @@ const detailService = {
     }
     const imageSavingExist = await prisma.saving_images.findFirst({
       where: {
-        saving_image_user_id: Number(user_id),
+        saving_image_user_id: Number(user?.user_id),
         saving_image_image_id: Number(image_id),
       },
     });
@@ -131,12 +130,11 @@ const detailService = {
 
     const imageGenerating = await prisma.saving_images.create({
       data: {
-        saving_image_user_id: user_id,
-        saving_image_image_id: image_id,
+        saving_image_user_id: Number(user?.user_id),
+        saving_image_image_id: Number( image_id),
       },
     });
     return imageGenerating;
   },
 };
-
 export default detailService;

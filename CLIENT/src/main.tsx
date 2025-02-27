@@ -9,9 +9,8 @@ import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/s
 import { Provider } from "react-redux";
 import store from "./redux/store.ts";
 import "./index.css";
-import { AppProvider } from "@toolpad/core/AppProvider";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 const queryClient = new QueryClient();
-
 const theme = createTheme({
   colorSchemes: {
     dark: true,
@@ -19,18 +18,18 @@ const theme = createTheme({
 });
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AppProvider>
-      <CssVarsProvider theme={theme}>
-        <CssBaseline />
-        <Provider store={store}>
-          <Router>
-            <QueryClientProvider client={queryClient}>
+    <CssVarsProvider theme={theme}>
+      <CssBaseline />
+      <Provider store={store}>
+        <Router>
+          <QueryClientProvider client={queryClient}>
+            <GoogleOAuthProvider clientId="579846682694-9cd9336ecfsknj0hjijouaq0nphr5kbv.apps.googleusercontent.com">
               <App />
-              <ReactQueryDevtools initialIsOpen={false} />
-            </QueryClientProvider>
-          </Router>
-        </Provider>
-      </CssVarsProvider>
-    </AppProvider>
+            </GoogleOAuthProvider>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        </Router>
+      </Provider>
+    </CssVarsProvider>
   </StrictMode>
 );

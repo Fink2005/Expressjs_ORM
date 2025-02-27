@@ -1,3 +1,5 @@
+import type { JwtPayload } from "jsonwebtoken";
+
 export type SignupRes = {
   user_id: number;
   user_name: string;
@@ -8,7 +10,19 @@ export type SignupRes = {
 };
 
 export type SigninRes = {
+  age: number | null;
+  avatar?: string | null | undefined;
   email: string;
-  accessToken: string;
-  refreshToken: string;
+  user_id: number;
+  user_name: string;
+  tokens: {
+    accessToken: string;
+    refreshToken: string;
+  };
 };
+
+export type googleRespone = {
+  email: string;
+  name: string;
+  picture: string;
+} | null;

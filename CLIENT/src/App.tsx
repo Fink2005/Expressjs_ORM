@@ -1,16 +1,20 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import { userRouter } from "./routers/UserRouter";
 import Layout from "./template/Layout";
-import Home from "./pages/Home";
-import Details from "./pages/Details";
 export default function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Layout content={<Home />} />} />
-        <Route
-          path="/image-detail/:id"
-          element={<Layout content={<Details />} />}
-        />
+        <Route path="/" element={<Layout />}>
+          {userRouter.map((route, index) => (
+            <Route
+              key={index}
+              index
+              path={route.path}
+              element={route.component}
+            />
+          ))}
+        </Route>
       </Routes>
     </>
   );

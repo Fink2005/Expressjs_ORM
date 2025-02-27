@@ -3,18 +3,18 @@ import { useImageHomePage } from "../api/hooks/use-image-homePage";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import { Link } from "react-router-dom";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+
 function Home() {
   const { data } = useImageHomePage();
-  const reverseData = data?.data.metaData;
+  const reverseData = data?.data.metaData.slice().reverse();
+
   return (
     <div className="p-3">
       <div className="">
         {reverseData && (
-          <ImageList variant="masonry" cols={6} gap={15}>
-            {reverseData
-              .slice()
-              .reverse()
-              .map((image, index) => (
+          <div>
+            <ImageList variant="masonry" cols={6} gap={15}>
+              {reverseData.map((image, index) => (
                 <ImageListItem key={index} className="group">
                   <div className="relative group">
                     <Link
@@ -46,7 +46,8 @@ function Home() {
                   </div>
                 </ImageListItem>
               ))}
-          </ImageList>
+            </ImageList>
+          </div>
         )}
       </div>
     </div>

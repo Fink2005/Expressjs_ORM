@@ -5,6 +5,7 @@ import type {
   Response,
   NextFunction,
 } from "express";
+import multer from "multer";
 
 import { responeError } from "./response.helper";
 type customErrMiddleware = ErrorRequestHandler & {
@@ -25,6 +26,9 @@ export const handleError = (
 
   if (err instanceof jwt.TokenExpiredError) {
     (err as any).code = 403;
+  }
+  if (err instanceof multer.MulterError) {
+    (err as any).code = 400;
   }
 
   const resData = responeError(err.message, err.code, err.stack);

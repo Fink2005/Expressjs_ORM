@@ -5,10 +5,16 @@ CREATE TABLE users (
 	user_id INT PRIMARY KEY AUTO_INCREMENT,
 	user_name VARCHAR(255) NOT NULL,
 	email VARCHAR(100) UNIQUE NOT NULL,
-	`password` VARCHAR(255) NOT NULL,
-	age TINYINT UNSIGNED NOT NULL,
+	`password` VARCHAR(255),
+	age TINYINT UNSIGNED,
 	avatar VARCHAR(255)
 )
+
+
+
+ALTER TABLE users ADD COLUMN googleId  VARCHAR(255) UNIQUE;
+
+ALTER TABLE users ADD COLUMN facebookId  VARCHAR(255) UNIQUE;
 
 INSERT INTO users (user_name, email, `password`, age, avatar)
 VALUES

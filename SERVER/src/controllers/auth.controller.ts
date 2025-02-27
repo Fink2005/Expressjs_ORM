@@ -32,10 +32,23 @@ const authController = {
   },
   google: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const authSignin: SigninRes = await authService.google(req);
+      const authSignin = await authService.google(req);
       const resauthSignin = responeSuccess(
         authSignin,
         "Sign in by google successfully",
+        200
+      );
+      res.status(resauthSignin.code).json(resauthSignin);
+    } catch (error) {
+      next(error);
+    }
+  },
+  facebook: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const authSignin = await authService.facebook(req);
+      const resauthSignin = responeSuccess(
+        authSignin,
+        "Sign in by facebook successfully",
         200
       );
       res.status(resauthSignin.code).json(resauthSignin);

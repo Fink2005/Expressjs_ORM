@@ -35,6 +35,7 @@ const detailController = {
   },
   imageCreatingOne: async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log('hello')
       let imageSaving = await detailService.imageCreatingOne(req);
       let resImageSaving = responeSuccess(
         imageSaving,

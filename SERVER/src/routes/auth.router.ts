@@ -6,6 +6,7 @@ const authRouter = express.Router();
 // authRouter.post("/signin", authController.signin);
 authRouter.post("/auth/signup", authController.signup);
 authRouter.post("/auth/signin", authController.signin);
-authRouter.post("/auth/google", passport.authenticate("google"));
+authRouter.post("/auth/google", authController.google);
+authRouter.post("/auth/facebook", authController.facebook);
 
 export default authRouter;

@@ -21,5 +21,24 @@ const userController = {
       next(error);
     }
   },
+  userUploadLocal: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const users = await userService.userUploadLocal(req);
+      console.log('hello')
+      const resUsers = responeSuccess(users, "Update user successFully", 200);
+      res.status(resUsers.code).json(resUsers);
+    } catch (error) {
+      next(error);
+    }
+  },
+  userUploadCloud: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const users = await userService.userUploadCloud(req);
+      const resUsers = responeSuccess(users, "Update user successFully", 200);
+      res.status(resUsers.code).json(resUsers);
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 export default userController;

@@ -1,7 +1,8 @@
 import { Avatar, Popover, Tooltip } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import React from "react";
+import React, { useContext } from "react";
 import DoneIcon from "@mui/icons-material/Done";
+import { UserContext, UserContextType } from "../pages/auth/Auth";
 export default function DropdownHeader() {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
@@ -15,14 +16,18 @@ export default function DropdownHeader() {
     setAnchorEl(null);
   };
   const open = Boolean(anchorEl);
+  const { user, loginUser, logoutUser } = useContext<
+    UserContextType | undefined
+  >(UserContext);
   const id = open ? "simple-popover" : undefined;
   return (
-    <div className="flex items-center w-[7%] space-x-2">
+    <div className="flex items-center w-full space-x-2">
       <Tooltip title="Hồ sơ của bạn">
         <div className="hover:bg-gray-custom p-2 rounded-lg">
-          <Avatar sx={{ width: 30, height: 30 }}>
-            <p className="text-sm">S</p>
-          </Avatar>
+          <Avatar
+            sx={{ width: 30, height: 30 }}
+            src={user.avatar ? user.avatar : user.avatar2}
+          ></Avatar>
         </div>
       </Tooltip>
       <Tooltip title="Tài khoản">
@@ -42,18 +47,26 @@ export default function DropdownHeader() {
           horizontal: "left",
         }}
       >
-        <div className="h-40 p-4 w-96">
-          <p className="text-xs font-normal">Đang đăng nhập</p>
-          <div className="bg-gray-400/30 flex rounded-md h-20 my-3">
+        <div className="h-48 p-4 w-96">
+          <p className="text-sm font-semibold">Đang đăng nhập</p>
+          <div className="transition-all cursor-pointer hover:bg-gray-400/30 flex rounded-md h-20 my-3">
             <div className="flex w-[90%]">
               <div className="h-full w-1/4 flex justify-center items-center">
-                <h1 className="text-xl font-bold">P</h1>
+                <Avatar
+                  sx={{ width: 50, height: 50 }}
+                  src={
+                    user.googleAvatar
+                      ? user.googleAvatar
+                      : user.facebookAvatar
+                        ? user.facebookAvatar
+                        : user.avatar && user.avatar
+                  }
+                ></Avatar>
               </div>
               <div className="w-3/4 flex flex-col justify-center">
-                <p className="text-md font-bold">Phan Sy</p>
+                <p className="text-md font-bold">{user.user_name}</p>
                 <div className="font-normal text-sm text-gray-500">
-                  <p>Ca nhan</p>
-                  <p>phans3806@gmail.com</p>
+                  <p>{user.email}</p>
                 </div>
               </div>
             </div>
@@ -61,7 +74,12 @@ export default function DropdownHeader() {
               <DoneIcon fontSize="small" />
             </div>
           </div>
-          <p className="text-sm font-semibold my-3">Đăng xuất</p>
+          <button
+            className="text-sm font-semibold my-3"
+            onClick={() => logoutUser()}
+          >
+            Đăng xuất
+          </button>
         </div>
       </Popover>
     </div>
