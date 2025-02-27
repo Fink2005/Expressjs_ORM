@@ -298,6 +298,14 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "upload-avt",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		},
@@ -372,15 +380,12 @@
 				},
 				{
 					"name": "Image-saving",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\n    \"user_id\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -388,19 +393,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{domain}}/api/image-saving?user_id=4",
+							"raw": "{{domain}}/api/image-saving",
 							"host": [
 								"{{domain}}"
 							],
 							"path": [
 								"api",
 								"image-saving"
-							],
-							"query": [
-								{
-									"key": "user_id",
-									"value": "4"
-								}
 							]
 						}
 					},
@@ -413,7 +412,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user-id\": 1,\n    \"image_id\": 6\n}",
+							"raw": "{\n \n    \"image_id\": 6\n}",
 							"options": {
 								"raw": {
 									"language": "json"
