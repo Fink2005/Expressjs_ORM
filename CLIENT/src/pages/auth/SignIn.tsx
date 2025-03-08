@@ -1,12 +1,16 @@
-import { IconButton, Modal, SnackbarCloseReason } from "@mui/material";
+import { Modal } from "@mui/material";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSignIn } from "../../api/hooks/use-auth";
 import { loginSchema } from "../../validations/authSchema";
 import Facebook from "./Facebook";
 import Google from "./Google";
 import { handleApiError } from "../../api/errHandler";
-import { UserContext } from "./Auth";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loginUser,
+  setDisplaySnackBar,
+} from "../../redux/features/auth/authSlice";
 
 export type displayType = {
   openModal: boolean;
@@ -14,22 +18,20 @@ export type displayType = {
   isSuccessMessage: boolean;
   displaySnack: boolean;
 };
+
 export default function SignIn() {
-  const {
-    user,
-    loginUser,
-    logoutUser,
-    switchAuth,
-    setDisplaySnackBar,
-    displaySnackBar,
-  } = useContext(UserContext);
+  const dispatch = useDispatch();
+  const { switchAuth } = useSelector((state) => state.auth); // Added RootState typing
+  const [displayModal, setDisplayModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (switchAuth) {
       setDisplayModal(true);
     }
   }, [switchAuth]);
+
   const { mutateAsync } = useSignIn();
+
   const icon = (
     <svg
       height={40}
@@ -47,7 +49,6 @@ export default function SignIn() {
       />
     </svg>
   );
-  const [displayModal, setDisplayModal] = useState<boolean>(false);
 
   const spinner = (
     <div role="status">
@@ -100,35 +101,36 @@ export default function SignIn() {
               initialValues={{ email: "", password: "" }}
               validationSchema={loginSchema}
               onSubmit={(values, { setSubmitting }) => {
-                console.log("Form Submitted:", values);
                 mutateAsync(values)
                   .then((res) => {
                     console.log("thanh cong", res);
                     setSubmitting(false);
-                    setDisplaySnackBar({
-                      ...displaySnackBar,
-                      displayMessage: `${res.data.message}, hello  ${res.data.metaData.user_name}`,
-                      displaySnack: true,
-                      isSuccessMessage: true,
-                    });
-                    loginUser(res.data.metaData);
+                    dispatch(
+                      setDisplaySnackBar({
+                        displayMessage: `${res.data.message}, hello ${res.data.metaData.user_name}`,
+                        displaySnack: true,
+                        isSuccessMessage: true,
+                      })
+                    );
+                    dispatch(loginUser(res.data.metaData));
                     setDisplayModal(false);
                   })
                   .catch((err) => {
                     console.log(err);
                     setSubmitting(false);
-                    setDisplaySnackBar({
-                      ...displaySnackBar,
-                      displayMessage: handleApiError(err),
-                      displaySnack: true,
-                      isSuccessMessage: false,
-                    });
+                    dispatch(
+                      setDisplaySnackBar({
+                        displayMessage: handleApiError(err),
+                        displaySnack: true,
+                        isSuccessMessage: false,
+                      })
+                    );
                     throw new Error(handleApiError(err));
                   });
               }}
             >
               {({ isSubmitting }) => (
-                <Form className=" max-w-md  ">
+                <Form className="max-w-md">
                   <div className="mb-4">
                     <label className="block text-gray-700">Email</label>
                     <Field
@@ -160,7 +162,7 @@ export default function SignIn() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-red-600 rounded-full text-white py-2  hover:bg-red-700 transition"
+                    className="w-full bg-red-600 rounded-full text-white py-2 hover:bg-red-700 transition"
                   >
                     {isSubmitting ? spinner : "Tiếp tục"}
                   </button>
@@ -168,14 +170,8 @@ export default function SignIn() {
               )}
             </Formik>
             <p className="text-sm font-semibold text-center my-3">Hoặc</p>
-            <Google
-              setDisplaySnackBar={setDisplaySnackBar}
-              displaySnackBar={displaySnackBar}
-            />
-            <Facebook
-              setDisplaySnackBar={setDisplaySnackBar}
-              displaySnackBar={displaySnackBar}
-            />
+            <Google />
+            <Facebook />
           </div>
         </div>
       </Modal>

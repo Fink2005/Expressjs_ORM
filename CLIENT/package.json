@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint ./src",
-    "lint:debug": "eslint ./src --debug",
-    "lint:fix": "eslint ./src --fix",
-    "preview": "vite preview"
+    "build": "bun run vite build",
+    "lint": "bun run eslint ./src",
+    "lint:debug": "bun run eslint ./src --debug",
+    "lint:fix": "bun run eslint ./src --fix",
+    "preview": "bun run vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -34,14 +34,12 @@
     "react-dom": "^18.3.1",
     "react-facebook-login": "^4.1.1",
     "react-icons": "^5.4.0",
+    "react-intersection-observer": "^9.15.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.1",
-<<<<<<< HEAD
     "socket.io-client": "^4.8.1",
+    "ts-react-google-login-component": "^1.1.9",
     "yup": "^1.6.1"
-=======
-    "ts-react-google-login-component": "^1.1.9"
->>>>>>> acaf6275ccd65d320a27848c401ebf3147c8fb16
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

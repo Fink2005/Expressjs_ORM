@@ -6,6 +6,8 @@ import { IoSend } from "react-icons/io5";
 import { Avatar, Popover } from "@mui/material";
 import { FaSmile } from "react-icons/fa";
 import { blue } from "@mui/material/colors";
+import { useDispatch, useSelector } from "react-redux";
+import { setDisplaySnackBar } from "../redux/features/auth/authSlice";
 
 type CommentsProps = {
   params: {
@@ -17,13 +19,15 @@ type CommentsProps = {
 export default function Comments({ params, socket }: CommentsProps) {
   const [displayComments, setDisplayComments] = useState<boolean>(false);
   const { data } = useInfoCommentsDetail(params.id);
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
   const [commentData, setCommentData] = useState<any>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
-  const [userExist, setUserExist] = useState("");
+
   useEffect(() => {
     if (data) {
       setCommentData(data?.data.metaData);
@@ -55,11 +59,7 @@ export default function Comments({ params, socket }: CommentsProps) {
       socket.off("join-detail-image");
     };
   }, [commentData]);
-  useEffect(() => {
-    if (localStorage.getItem("user")) {
-      setUserExist(JSON.parse(localStorage.getItem("user")!));
-    }
-  }, []);
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -76,18 +76,25 @@ export default function Comments({ params, socket }: CommentsProps) {
   };
 
   const handlePushComment = async () => {
-    if (!userExist) {
-      alert("can phai dang nhap");
+    if (!user) {
+      dispatch(
+        setDisplaySnackBar({
+          displayMessage: "You need to login",
+          isSuccessMessage: false,
+          displaySnack: true,
+        })
+      );
       return;
     }
     const dataPushComment = {
       image_id: Number(params.id),
-      user_info: userExist,
+      user_info: user,
       comment_content: inputValue,
     };
 
     await socket.emit("send-message", dataPushComment);
     setInputValue("");
+    refetch();
   };
   console.log(commentData);
   const open = Boolean(anchorEl);

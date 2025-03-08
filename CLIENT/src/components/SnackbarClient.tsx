@@ -2,18 +2,13 @@ import { Alert, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
 
-import React, { SetStateAction, useState } from "react";
-import { DisplaySnackBarType } from "../../pages/auth/Auth";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setDisplaySnackBar } from "../redux/features/auth/authSlice";
 
-type snackBarType = {
-  displaySnackBar: DisplaySnackBarType;
-  setDisplaySnackBar: React.Dispatch<SetStateAction<DisplaySnackBarType>>;
-};
-
-export default function SnackbarAuth({
-  displaySnackBar,
-  setDisplaySnackBar,
-}: snackBarType) {
+export default function SnackbarClient() {
+  const { displaySnackBar } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const handleClose = (
     event: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason
@@ -21,8 +16,9 @@ export default function SnackbarAuth({
     if (reason === "clickaway") {
       return;
     }
-    setDisplaySnackBar({ ...displaySnackBar, displaySnack: false });
+    dispatch(setDisplaySnackBar(false));
   };
+
   const action = (
     <IconButton
       size="small"
@@ -36,7 +32,7 @@ export default function SnackbarAuth({
 
   return (
     <div>
-      {displaySnackBar?.isSuccessMessage ? (
+      {displaySnackBar.isSuccessMessage ? (
         <Snackbar
           anchorOrigin={{ horizontal: "center", vertical: "top" }}
           autoHideDuration={5000}

@@ -4,7 +4,7 @@ import { responeSuccess } from "../common/helpers/response.helper";
 const homePageController = {
   imagesList: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let images = await homePageService.imagesList();
+      let images = await homePageService.imagesList(req);
       let resImages = responeSuccess(images, "get images successfully", 200);
       res.status(resImages.code).json(resImages);
     } catch (error) {

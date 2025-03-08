@@ -1,16 +1,13 @@
 import { GoogleLogin } from "@react-oauth/google";
-import React, { useContext } from "react";
 import { useGoogle } from "../../api/hooks/use-auth";
-import { DisplaySnackBarType, UserContext } from "./Auth";
-type googleType = {
-  setDisplaySnackBar: React.Dispatch<React.SetStateAction<DisplaySnackBarType>>;
-  displaySnackBar: DisplaySnackBarType;
-};
-export default function Google({
+import { useDispatch } from "react-redux";
+import {
+  loginUser,
   setDisplaySnackBar,
-  displaySnackBar,
-}: googleType) {
-  const { loginUser } = useContext(UserContext);
+} from "../../redux/features/auth/authSlice";
+
+export default function Google() {
+  const dispatch = useDispatch();
 
   const { mutateAsync } = useGoogle();
   return (
@@ -22,20 +19,23 @@ export default function Google({
           mutateAsync({ googleToken: credentialResponse.credential })
             .then((res) => {
               console.log(res);
-              setDisplaySnackBar({
-                ...displaySnackBar,
-                displayMessage: `${res.data.message}, hello  ${res.data.metaData.user_name}`,
-                displaySnack: true,
-                isSuccessMessage: true,
-              });
-              loginUser(res.data.metaData);
+              dispatch(
+                setDisplaySnackBar({
+                  displayMessage: `${res.data.message}, hello  ${res.data.metaData.user_name}`,
+                  displaySnack: true,
+                  isSuccessMessage: true,
+                })
+              );
+              dispatch(loginUser(res.data.metaData));
             })
             .catch((error) => {
-              console.log(error);
-              setDisplaySnackBar({
-                ...displaySnackBar,
-                displaySnack: true,
-              });
+              dispatch(
+                setDisplaySnackBar({
+                  displayMessage: `Loi`,
+                  displaySnack: true,
+                  isSuccessMessage: true,
+                })
+              );
             });
         }}
         onError={() => {

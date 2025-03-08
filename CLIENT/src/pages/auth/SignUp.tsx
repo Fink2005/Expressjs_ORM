@@ -1,15 +1,17 @@
 import { Modal } from "@mui/material";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useSignUp } from "../../api/hooks/use-auth";
 import { registerSchema } from "../../validations/authSchema";
 
 import { handleApiError } from "../../api/errHandler";
-import { UserContext } from "./Auth";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setDisplaySnackBar,
+  setSwitchAuth,
+} from "../../redux/features/auth/authSlice";
 
 export default function SignUp() {
-  const { setSwitchAuth, setDisplaySnackBar, displaySnackBar } =
-    useContext(UserContext);
   const [displayModal, setDisplayModal] = useState<boolean>(false);
   const { mutateAsync } = useSignUp();
   const icon = (
@@ -52,6 +54,9 @@ export default function SignUp() {
     </div>
   );
 
+  const dispatch = useDispatch();
+  const { switchAuth } = useSelector((state) => state.auth); // Added RootState typing
+
   return (
     <div className="">
       <div className="flex items-center h-full w-full">
@@ -92,13 +97,14 @@ export default function SignUp() {
                     console.log("thanh cong", res);
                     setSubmitting(false);
                     setDisplayModal(false);
-                    setDisplaySnackBar({
-                      ...displaySnackBar,
-                      displayMessage: `Đăng ký thành công`,
-                      displaySnack: true,
-                      isSuccessMessage: true,
-                    });
-                    setSwitchAuth((prev: any) => !prev);
+                    dispatch(
+                      setDisplaySnackBar({
+                        displayMessage: `Đăng ký thành công`,
+                        displaySnack: true,
+                        isSuccessMessage: true,
+                      })
+                    );
+                    dispatch(setSwitchAuth(true));
                   })
                   .catch((err) => {
                     console.log(err);

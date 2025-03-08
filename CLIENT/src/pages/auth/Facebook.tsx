@@ -1,18 +1,14 @@
-import React, { useContext } from "react";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import { FaFacebook } from "react-icons/fa";
 import { useFacebook } from "../../api/hooks/use-auth";
-import { DisplaySnackBarType, UserContext } from "./Auth";
-type facebookType = {
-  setDisplaySnackBar: React.Dispatch<React.SetStateAction<DisplaySnackBarType>>;
-  displaySnackBar: DisplaySnackBarType;
-};
-export default function Facebook({
-  displaySnackBar,
+import { useDispatch } from "react-redux";
+import {
+  loginUser,
   setDisplaySnackBar,
-}: facebookType) {
-  const { loginUser } = useContext(UserContext);
+} from "../../redux/features/auth/authSlice";
 
+export default function Facebook() {
+  const dispatch = useDispatch();
   const { mutateAsync } = useFacebook();
   const responseFacebook = (response: any) => {
     const dataRespone = {
@@ -24,13 +20,14 @@ export default function Facebook({
     mutateAsync(dataRespone)
       .then((res) => {
         console.log({ res });
-        setDisplaySnackBar({
-          ...displaySnackBar,
-          displayMessage: `${res.data.message}, hello  ${res.data.metaData.user_name}`,
-          displaySnack: true,
-          isSuccessMessage: true,
-        });
-        loginUser(res.data.metaData);
+        dispatch(
+          setDisplaySnackBar({
+            displayMessage: `${res.data.message}, hello  ${res.data.metaData.user_name}`,
+            displaySnack: true,
+            isSuccessMessage: true,
+          })
+        );
+        dispatch(loginUser(res.data.metaData));
       })
       .catch((err) => console.log(err));
     console.log(response);

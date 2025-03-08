@@ -22,24 +22,29 @@ export default function Sidebar() {
         </svg>
       ),
       title: "Trang chủ",
+      url: "/",
     },
     {
       icon: <HomeOutlinedIcon fontSize="medium" />,
       title: "Trang chủ",
+      url: "/",
     },
     {
       icon: <AddBoxOutlinedIcon fontSize="medium" />,
       title: "Tạo",
+      url: "/",
     },
     {
       icon: <NotificationsNoneOutlinedIcon fontSize="medium" />,
       title: "Cập nhật",
+      url: "/",
     },
     {
       icon: <MessageOutlinedIcon fontSize="medium" />,
       title: "Tin nhắn",
+      url: "/",
     },
-    { icon: <ToogleTheme />, title: "Theme" },
+    { icon: <ToogleTheme />, title: "Theme", url: "/" },
   ];
   return (
     <div>

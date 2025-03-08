@@ -10,6 +10,7 @@ import { Provider } from "react-redux";
 import store from "./redux/store.ts";
 import "./index.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import SnackbarClient from "./components/SnackbarClient.tsx";
 const queryClient = new QueryClient();
 const theme = createTheme({
   colorSchemes: {
@@ -25,6 +26,7 @@ createRoot(document.getElementById("root")!).render(
           <QueryClientProvider client={queryClient}>
             <GoogleOAuthProvider clientId="579846682694-9cd9336ecfsknj0hjijouaq0nphr5kbv.apps.googleusercontent.com">
               <App />
+              <SnackbarClient />
             </GoogleOAuthProvider>
             <ReactQueryDevtools initialIsOpen={false} />
           </QueryClientProvider>

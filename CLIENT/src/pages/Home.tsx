@@ -3,18 +3,29 @@ import { useImageHomePage } from "../api/hooks/use-image-homePage";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import { Link } from "react-router-dom";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 function Home() {
-  const { data } = useImageHomePage();
-  const reverseData = data?.data.metaData.slice().reverse();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useImageHomePage();
 
+  const flatData = data?.pages.flatMap(
+    (item) => item.data.metaData.items.slice().reverse() || []
+  );
+  const { ref, inView } = useInView();
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      console.log("hello");
+      fetchNextPage();
+    }
+  }, [inView]);
   return (
     <div className="p-3">
       <div className="">
-        {reverseData && (
+        {flatData && (
           <div>
             <ImageList variant="masonry" cols={6} gap={15}>
-              {reverseData.map((image, index) => (
+              {flatData.map((image, index) => (
                 <ImageListItem key={index} className="group">
                   <div className="relative group">
                     <Link
@@ -46,7 +57,9 @@ function Home() {
                   </div>
                 </ImageListItem>
               ))}
+              <div ref={ref}></div>
             </ImageList>
+            <div>{isFetchingNextPage && "Loading"}</div>
           </div>
         )}
       </div>

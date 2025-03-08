@@ -1,12 +1,14 @@
 import { Avatar, Popover, Tooltip } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import React, { useContext } from "react";
+import React from "react";
 import DoneIcon from "@mui/icons-material/Done";
-import { UserContext, UserContextType } from "../pages/auth/Auth";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../redux/features/auth/authSlice";
 export default function DropdownHeader() {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
+  const { user } = useSelector((state: any) => state.auth);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -16,9 +18,7 @@ export default function DropdownHeader() {
     setAnchorEl(null);
   };
   const open = Boolean(anchorEl);
-  const { user, loginUser, logoutUser } = useContext<
-    UserContextType | undefined
-  >(UserContext);
+  const dispatch = useDispatch();
   const id = open ? "simple-popover" : undefined;
   return (
     <div className="flex items-center w-full space-x-2">
@@ -54,13 +54,7 @@ export default function DropdownHeader() {
               <div className="h-full w-1/4 flex justify-center items-center">
                 <Avatar
                   sx={{ width: 50, height: 50 }}
-                  src={
-                    user.googleAvatar
-                      ? user.googleAvatar
-                      : user.facebookAvatar
-                        ? user.facebookAvatar
-                        : user.avatar && user.avatar
-                  }
+                  src={user.avatar2 ? user.avatar2 : user.avatar}
                 ></Avatar>
               </div>
               <div className="w-3/4 flex flex-col justify-center">
@@ -75,8 +69,8 @@ export default function DropdownHeader() {
             </div>
           </div>
           <button
-            className="text-sm font-semibold my-3"
-            onClick={() => logoutUser()}
+            className="text-sm font-semibold my-3 active:text-red-500"
+            onClick={() => dispatch(logoutUser())}
           >
             Đăng xuất
           </button>

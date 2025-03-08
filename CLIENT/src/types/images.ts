@@ -10,11 +10,13 @@ export type savingImageType = {
 
 export type image = {
   metaData: {
+   items: {
     image_id: number;
     image_name: string;
     image_url: string;
     image_des: string;
     image_user_id: number;
+   }
   }[];
 };
 
